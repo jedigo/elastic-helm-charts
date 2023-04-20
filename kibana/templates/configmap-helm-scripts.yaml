@@ -15,7 +15,9 @@ metadata:
 data:
   manage-es-token.js: |
     const https = require('https');
+    const http = require('http');
     const fs = require('fs');
+    const urlParser = require('url');
 
     // Read environment variables
     function getEnvVar(name) {
@@ -77,7 +79,9 @@ data:
     // With thanks to https://stackoverflow.com/questions/57332374/how-to-chain-http-request
     function requestPromise(url, httpsOptions, extraOptions = {}) {
       return new Promise((resolve, reject) => {
-        const request = https.request(url, httpsOptions, response => {
+
+        var client = urlParser.parse(url).protocol === 'http:' ? http : https;
+        const request = client.request(url, httpsOptions, response => {
 
           console.log('statusCode:', response.statusCode);
 
